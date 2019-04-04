@@ -1,0 +1,20 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t karanbhomia/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run karanbhomia/react-test npm run test -- --coverage
+
+after_success:
+  - docker build -t karanbhomia/multi-client ./client
+  - docker build -t karanbhomia/multi-nginx ./nginx
+  - docker build -t karanbhomia/multi-server ./server
+  - docker build -t karanbhomia/multi-worker ./worker
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push karanbhomia/multi-client
+  - docker push karanbhomia/multi-nginx
+  - docker push karanbhomia/multi-server
+  - docker push karanbhomia/multi-worker
