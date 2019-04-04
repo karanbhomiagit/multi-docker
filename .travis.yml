@@ -13,7 +13,9 @@ after_success:
   - docker build -t karanbhomia/multi-nginx ./nginx
   - docker build -t karanbhomia/multi-server ./server
   - docker build -t karanbhomia/multi-worker ./worker
+  #login
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  #publish
   - docker push karanbhomia/multi-client
   - docker push karanbhomia/multi-nginx
   - docker push karanbhomia/multi-server
